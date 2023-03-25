@@ -1,10 +1,14 @@
+from pathlib import Path
 import PySimpleGUI as sg
 import pandas as pd
 
+current_dir = Path(__file__).parent
+EXCEL_FILE = current_dir / 'Saved_Events.xlsx'
+
 
 # Build GUI windows to enter new event to spreadsheet
-def enter_data(excel):
-    df = pd.read_excel(excel)
+def enter_data():
+    df = pd.read_excel(EXCEL_FILE)
 
     enter_data_layout = [
         [sg.Text('Please fill out the following fields:')],
@@ -18,6 +22,10 @@ def enter_data(excel):
                    '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26',
                    '27', '28', '29', '30', '31'], key='Day')],
         [sg.Text('Year', size=(15, 1)), sg.Combo(['2023', '2024', '2025'], key='Year')],
+        [sg.Text('Please enter wishlist items for the event:')],
+        [sg.Text('Wishlist Item 1:', size=(15, 1)), sg.InputText(key='Wishlist Item 1')],
+        [sg.Text('Wishlist Item 2:', size=(15, 1)), sg.InputText(key='Wishlist Item 2')],
+        [sg.Text('Wishlist Item 3:', size=(15, 1)), sg.InputText(key='Wishlist Item 3')],
 
         [sg.Submit(), sg.Button('Clear'), sg.Exit()]
     ]
@@ -34,7 +42,7 @@ def enter_data(excel):
         if event == 'Submit':
             new_record = pd.DataFrame(values, index=[0])
             df = pd.concat([df, new_record], ignore_index=True)
-            df.to_excel(excel, index=False)
+            df.to_excel(EXCEL_FILE, index=False)
             sg.popup('Event Saved!')
             enter_data_window.close()
 
